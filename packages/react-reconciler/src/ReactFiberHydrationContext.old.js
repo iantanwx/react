@@ -99,10 +99,19 @@ function reenterHydrationStateFromDehydratedSuspenseInstance(
   return true;
 }
 
+let numDeleteInstance = 0
+
 function deleteHydratableInstance(
   returnFiber: Fiber,
   instance: HydratableInstance,
 ) {
+  numDeleteInstance += 1;
+  console.log(`===
+  called deleteHydratableInstance
+  deleted: ${instance.tagName || instance.wholeText}
+  from: ${returnFiber}
+  deleted ${numDeleteInstance} nodes
+  ===`)
   if (__DEV__) {
     switch (returnFiber.tag) {
       case HostRoot:
@@ -278,6 +287,11 @@ function tryToClaimNextHydratableInstance(fiber: Fiber): void {
     // superfluous and we'll delete it. Since we can't eagerly delete it
     // we'll have to schedule a deletion. To do that, this node needs a dummy
     // fiber associated with it.
+    console.log(`
+    ===
+    superfluous node: ${firstAttemptedInstance.tagName}
+    ===
+    `)
     deleteHydratableInstance(
       (hydrationParentFiber: any),
       firstAttemptedInstance,
@@ -285,6 +299,9 @@ function tryToClaimNextHydratableInstance(fiber: Fiber): void {
   }
   hydrationParentFiber = fiber;
   nextHydratableInstance = getFirstHydratableChild((nextInstance: any));
+  console.log(`===
+  nextInstance: ${nextHydratableInstance}
+  ===`)
 }
 
 function prepareToHydrateHostInstance(
@@ -451,6 +468,11 @@ function popHydrationState(fiber: Fiber): boolean {
   ) {
     let nextInstance = nextHydratableInstance;
     while (nextInstance) {
+      console.log(`===
+      popHydrationState:
+      deleting hydratable node: ${nextInstance}
+      from fiber: ${fiber.stateNode}
+      ===`)
       deleteHydratableInstance(fiber, nextInstance);
       nextInstance = getNextHydratableSibling(nextInstance);
     }

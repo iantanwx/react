@@ -260,10 +260,10 @@ export function createContainer(
 }
 
 export function updateContainer(
-  element: ReactNodeList,
-  container: OpaqueRoot,
-  parentComponent: ?React$Component<any, any>,
-  callback: ?Function,
+  element: ReactNodeList, // App
+  container: OpaqueRoot, // host container
+  parentComponent: ?React$Component<any, any>, // null
+  callback: ?Function, // null
 ): Lane {
   if (__DEV__) {
     onScheduleRoot(container, element);

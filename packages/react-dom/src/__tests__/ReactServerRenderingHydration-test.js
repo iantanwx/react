@@ -623,4 +623,24 @@ describe('ReactDOMServerHydration', () => {
       'Warning: Did not expect server HTML to contain a <p> in <div>',
     );
   });
+
+  it('test hypothesis', () => {
+    const markup = ReactDOMServer.renderToString(
+      <div>
+        <section>breadcrubms</section>
+        <div className="full-height">something else</div>
+      </div>
+    );
+
+    const rootElement = document.createElement('div');
+    rootElement.innerHTML = markup;
+
+    ReactDOM.hydrate(
+      <div>
+        <div></div>
+        <section>totally different</section>
+      </div>,
+      rootElement
+    );
+  })
 });
